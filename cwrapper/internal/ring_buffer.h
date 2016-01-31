@@ -4,71 +4,49 @@
 #include <stddef.h>
 #include <stdint.h>
 
-template<class T>
+template<class T, size_t capacity>
 class RingBuffer
 {
 public:
-  RingBuffer(size_t buffer_size);
-  ~RingBuffer(void);
-
   void push_back(T elem);
   T* pop_front(void);
   bool available(void) const;
 
 private:
-  T* ring;
-  const size_t capacity_;
+  T ring[capacity];
   size_t count;
   size_t headIdx;
   size_t tailIdx;
 };
 
-template<class T>
-RingBuffer<T>::RingBuffer(size_t capacity)
-:
-    capacity_(capacity),
-        count(0)
-            , headIdx(0)
-            , tailIdx(0)
-{
-  ring = new T[capacity];
-}
-
-template<class T>
-RingBuffer<T>::~RingBuffer(void)
-{
-  delete[] ring;
-}
-
-template<class T>
-void RingBuffer<T>::push_back(T elem)
+template<class T, size_t capacity>
+void RingBuffer<T, capacity>::push_back(T elem)
 {
   ring[headIdx] = elem;
-  headIdx = headIdx == capacity_ - 1 ? 0 : headIdx + 1;
-  if (count == capacity_)
+  headIdx = headIdx == capacity - 1 ? 0 : headIdx + 1;
+  if (count == capacity)
   {
-    tailIdx = tailIdx == capacity_ - 1 ? 0 : tailIdx + 1;
+    tailIdx = tailIdx == capacity - 1 ? 0 : tailIdx + 1;
     return;
   }
   count++;
 }
 
-template<class T>
-T* RingBuffer<T>::pop_front(void)
+template<class T, size_t capacity>
+T* RingBuffer<T, capacity>::pop_front(void)
 {
-  T* result;
-  if (count == 0)
+  if (!available())
   {
     return nullptr;
   }
-  result = ring + tailIdx;
-  tailIdx = tailIdx == capacity_ - 1 ? 0 : tailIdx + 1;
+  T* result = ring + tailIdx;
+  tailIdx = tailIdx == capacity - 1 ? 0 : tailIdx + 1;
   count--;
   return result;
 }
 
-template<class T>
-bool RingBuffer<T>::available(void) const
+template<class T, size_t capacity>
+bool RingBuffer<T, capacity>::available(void) const
     {
   return count > 0;
 }

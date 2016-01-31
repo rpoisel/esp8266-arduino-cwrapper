@@ -10,7 +10,7 @@
 
 static WiFiClient espClient;
 static PubSubClient client(espClient);
-static RingBuffer<MQTTMessage> ring_buffer(5);
+static RingBuffer<MQTTMessage, 5> ring_buffer;
 
 static void mqtt_callback(char* topic, byte* payload, unsigned int length);
 
