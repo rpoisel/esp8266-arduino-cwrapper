@@ -12,6 +12,5 @@ target_include_directories(user_code PRIVATE
 )
 
 target_link_libraries(user_code PUBLIC
-    arduino
-    wrapper
+    cwrapper
 )

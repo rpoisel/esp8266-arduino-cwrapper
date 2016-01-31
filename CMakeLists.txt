@@ -3,5 +3,5 @@ cmake_minimum_required(VERSION 3.0)
 
 add_subdirectory(external)
 
-add_subdirectory(wrapper)
+add_subdirectory(cwrapper)
 add_subdirectory(user)
